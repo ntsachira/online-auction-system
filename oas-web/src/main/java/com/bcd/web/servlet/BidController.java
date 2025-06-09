@@ -23,23 +23,23 @@ public class BidController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = String.valueOf(request.getSession().getAttribute("username"));
-        if(username != null) {
+//        String username = String.valueOf(request.getSession().getAttribute("username"));
+//        if(username != null) {
             JsonObject jsonObject = new Gson().fromJson(request.getReader(), JsonObject.class);
             int auctionId = jsonObject.get("auctionId").getAsInt();
             double amount = jsonObject.get("amount").getAsDouble();
             if(bidManager.validateBid(auctionId,amount)){
                 try {
-                    bidManager.queueBid(auctionId,username,amount);
+                    bidManager.queueBid(auctionId,"user",amount);
                 } catch (jakarta.jms.JMSException e) {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
                 }
             }else{
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bid not accepted");
+//                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bid not accepted");
             }
-        }else{
-            response.sendRedirect("index.jsp");
-        }
+//        }else{
+//            response.sendRedirect("index.jsp");
+//        }
 
     }
 }

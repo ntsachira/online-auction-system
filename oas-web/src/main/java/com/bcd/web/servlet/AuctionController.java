@@ -1,7 +1,6 @@
 package com.bcd.web.servlet;
 
 import com.bcd.auction.remote.AuctionManager;
-import com.bcd.core.model.AuctionData;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.ejb.EJB;
@@ -20,16 +19,6 @@ public class AuctionController extends HttpServlet {
 
     @EJB
     private AuctionManager auctionManager;
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        try {
-            response.getWriter().write(new Gson().toJson(auctionManager.getAllAuctions()));
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
