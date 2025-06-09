@@ -43,7 +43,9 @@ public class AuctionManagerBean implements AuctionManager {
     }
 
 
+    // Example from AuctionManagerBean
     private Map<Integer,AuctionData> getAuctionMap() throws NamingException {
+        // JNDI Lookup for a shared application context
         ServletContext context = (ServletContext) new InitialContext()
                 .lookup("auctionServletContext");
         return (Map<Integer,AuctionData>) context.getAttribute("auctionMap");

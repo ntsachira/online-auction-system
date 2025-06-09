@@ -13,6 +13,15 @@ public class AuctionData implements Serializable {
     private String highestBidder;
     private long endTimestamp;
 
+    public static final String AUCTION_ID = "auctionId";
+    public static final String ITEM_NAME = "itemName";
+    public static final String FLOOR_PRICE = "floorPrice";
+    public static final String HIGHEST_BID = "highestBid";
+    public static final String HIGHEST_BIDDER = "highestBidder";
+    public static final String END_TIMESTAMP = "endTimestamp";
+    public static final String AMOUNT = "amount";
+
+
     public AuctionData() {
     }
 

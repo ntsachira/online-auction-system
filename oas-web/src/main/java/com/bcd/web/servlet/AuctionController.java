@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import javax.naming.NamingException;
 import java.io.IOException;
 
-@WebServlet("/loadAuctionList")
-public class LoadActionList extends HttpServlet {
+@WebServlet("/auction")
+public class AuctionController extends HttpServlet {
 
     @EJB
     private AuctionManager auctionManager;

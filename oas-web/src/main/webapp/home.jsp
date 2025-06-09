@@ -120,9 +120,9 @@
 </form>
 
 <script>
-    window.onload = function() {
-        initAuctions();
-    }
+    // window.onload = function() {
+    //     initAuctions();
+    // }
     function viewAuction(auctionId) {
         document.getElementById('auctionId').value = auctionId;
         document.getElementById('viewAuctionForm').submit();

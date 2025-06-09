@@ -1,15 +1,10 @@
 package com.bcd.bid.mdb;
 
-import com.bcd.auction.remote.AuctionManager;
 import com.bcd.bid.remote.BidManager;
-import com.bcd.core.model.AuctionData;
-import jakarta.annotation.Resource;
 import jakarta.ejb.ActivationConfigProperty;
 import jakarta.ejb.EJB;
 import jakarta.ejb.MessageDriven;
 import jakarta.jms.*;
-
-import javax.naming.NamingException;
 
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationType",propertyValue = "jakarta.jms.Queue"),
@@ -19,6 +14,7 @@ import javax.naming.NamingException;
 })
 public class BidQueueMDB implements MessageListener {
 
+    // ... MDB logic for processing bids asynchronously ...
 
     @EJB
     private BidManager bidManager;
@@ -33,7 +29,7 @@ public class BidQueueMDB implements MessageListener {
             double amount = msg.getDouble("amount");
 
             bidManager.placeBid(auctionId, bidder, amount);
-
+            message.acknowledge();
             System.out.println("Auction " + auctionId + " placed bid for " + bidder);
 
         } catch (JMSException e) {

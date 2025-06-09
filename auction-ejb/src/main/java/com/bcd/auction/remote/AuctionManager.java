@@ -15,5 +15,4 @@ public interface AuctionManager {
     AuctionData getAuctionById(int auctionId) throws NamingException;
     List<AuctionData> getAllAuctions() throws NamingException;
     void closeAuction(int auctionId) throws NamingException;
-
 }

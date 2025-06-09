@@ -21,38 +21,25 @@ public class BidController extends HttpServlet {
     @EJB
     private BidManager bidManager;
 
-    @EJB
-    private AuctionManager auctionManager;
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int auctionId = Integer.parseInt(request.getParameter("auctionId"));
-        try {
-            AuctionData data = auctionManager.getAuctionById(auctionId);
-            response.setContentType("application/json");
-
-            if(data == null) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("status", "closed");
-                response.getWriter().write(jsonObject.toString());
-            }else{
-                response.getWriter().write(data.toString(true));
-            }
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JsonObject jsonObject = new Gson().fromJson(request.getReader().readLine(), JsonObject.class);
-        int auctionId = jsonObject.get("auctionId").getAsInt();
-        double amount = jsonObject.get("amount").getAsDouble();
-
-        try {
-            bidManager.queueBid(auctionId,"",amount);
-        } catch (jakarta.jms.JMSException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
+        String username = String.valueOf(request.getSession().getAttribute("username"));
+        if(username != null) {
+            JsonObject jsonObject = new Gson().fromJson(request.getReader(), JsonObject.class);
+            int auctionId = jsonObject.get("auctionId").getAsInt();
+            double amount = jsonObject.get("amount").getAsDouble();
+            if(bidManager.validateBid(auctionId,amount)){
+                try {
+                    bidManager.queueBid(auctionId,username,amount);
+                } catch (jakarta.jms.JMSException e) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
+                }
+            }else{
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bid not accepted");
+            }
+        }else{
+            response.sendRedirect("index.jsp");
         }
+
     }
 }

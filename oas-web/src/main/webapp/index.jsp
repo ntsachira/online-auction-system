@@ -44,6 +44,18 @@
             justify-content: center;
         }
 
+        .manage-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
 
         .manage-btn:hover {
             background-color: #2980b9;
@@ -71,6 +83,7 @@
 </head>
 <body>
 <div class="app-heading">Online Auction System (Testing Mode)</div>
+<button class="manage-btn" onclick="window.location.href='manage-auction.jsp'">Manage Auction</button>
 <h1>Login as an Attendee</h1>
 <div class="user-container">
     <div class="user-card" onclick="loginAsUser('Alice')">Alice</div>

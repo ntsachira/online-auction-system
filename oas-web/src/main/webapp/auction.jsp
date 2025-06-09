@@ -109,7 +109,7 @@
 
         <div class="bid-container">
             <input type="number" id="bidAmount" class="bid-input" placeholder="Enter your bid">
-            <button class="bid-btn" onclick="placeBid()">Place Bid</button>
+            <button id="bid-btn" class="bid-btn" onclick="placeBid()">Place Bid</button>
         </div>
     </div>
 </div>
@@ -174,6 +174,7 @@
     }
 
     async function placeBid() {
+
         const bidAmount = parseFloat(document.getElementById('bidAmount').value);
         if (isNaN(bidAmount) || bidAmount <= auctionData.highestBid) {
             alert('Please enter a valid bid greater than the current highest bid.');
@@ -186,8 +187,20 @@
             amount: bidAmount
         };
 
-        ws.send(JSON.stringify(bidMessage))
-        document.getElementById('bidAmount').value = "";
+        const response = await fetch('http://localhost:8080/oas/bid', {
+            method: 'POST',
+            body: JSON.stringify(bidMessage),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        if(response.ok){
+            document.getElementById('bidAmount').value = "";
+        }else{
+            alert('BId Failed');
+        }
+
     }
 </script>
 </body>
