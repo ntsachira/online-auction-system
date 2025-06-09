@@ -39,7 +39,7 @@ public class AuctionData implements Serializable {
         this.itemName = itemName;
         this.highestBid = highestBid;
         this.highestBidder = highestBidder;
-        this.endTimestamp = endTimestamp;
+        this.endTimestamp = System.currentTimeMillis()+endTimestamp;
     }
 
     public double getFloorPrice() {
@@ -87,7 +87,7 @@ public class AuctionData implements Serializable {
     }
 
     public void setEndTimestamp(long endTimestamp) {
-        this.endTimestamp = endTimestamp;
+        this.endTimestamp = System.currentTimeMillis()+endTimestamp;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bcd.bid.bean;
 
 import com.bcd.auction.remote.AuctionManager;
 import com.bcd.bid.remote.BidManager;
+import com.bcd.core.factory.AMQConnectionFactory;
 import com.bcd.core.model.AuctionData;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
@@ -29,6 +30,9 @@ public class BidManagerBean implements BidManager {
 
     @Resource(lookup = "auctionTopic")
     private Topic topic;
+
+    @EJB
+    private AuctionManager auctionManager;
 
     @Override
     public void queueBid(int auctionId, String bidderName, double bidAmount) {
@@ -67,22 +71,10 @@ public class BidManagerBean implements BidManager {
                 System.out.println("Highest bid is " + bidAmount);
                 data.setHighestBid(bidAmount);
                 data.setHighestBidder(bidderName);
-                broadcastUpdate(auctionId);
+                auctionManager.broadcastUpdate(auctionId);
             }
         } catch (NamingException | JMSException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void broadcastUpdate(int auctionId) throws JMSException {
-        try(Connection connection = connectionFactory.createConnection()){
-            connection.setClientID("BID-" + auctionId);
-            connection.start();
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageProducer producer = session.createProducer(topic);
-            MapMessage message = session.createMapMessage();
-            message.setInt("auctionId",auctionId);
-            producer.send(message);
         }
     }
 

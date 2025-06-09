@@ -15,15 +15,8 @@ import java.io.IOException;
 @WebServlet("/home")
 public class Home extends HttpServlet {
 
-    @EJB
-    AuctionManager auctionManager;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            auctionManager.openAuction(123,"Vintage clock",300000);
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 }

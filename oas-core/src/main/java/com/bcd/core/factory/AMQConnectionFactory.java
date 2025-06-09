@@ -1,4 +1,4 @@
-package com.bcd.bid.bean;
+package com.bcd.core.factory;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.activemq.ActiveMQConnectionFactory;

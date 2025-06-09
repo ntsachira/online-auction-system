@@ -90,24 +90,26 @@
         button.close-btn:hover {
             background-color: #a30000;
         }
-        button.restart-btn {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button.restart-btn:hover {
-            background-color: #004999;
-        }
     </style>
     <script>
-        function restartAuction(auctionId) {
-            const newDuration = prompt("Enter new duration (in minutes) for auction ID " + auctionId + ":");
-            if (newDuration !== null && newDuration.trim() !== "") {
-                alert("Auction ID " + auctionId + " will be restarted with duration: " + newDuration + " minutes.");
-                // Here you would call your backend to restart the auction
+
+        async function startAuction() {
+            const data = {
+                itemName:document.getElementById("itemName").value,
+                price:document.getElementById("startingPrice").value,
+                duration:document.getElementById("duration").value,
+            }
+            const response = await fetch("http://localhost:8080/oas/auction",{
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' },
+            })
+            if(response.ok){
+                document.getElementById("itemName").value = "";
+                document.getElementById("startingPrice").value = "";
+                document.getElementById("duration").value = "";
+            }else{
+                console.log("Auction not started");
             }
         }
     </script>
@@ -123,8 +125,8 @@
         <form id="auctionForm">
             <input type="text" id="itemName" placeholder="Item Name" required />
             <input type="number" id="startingPrice" placeholder="Starting Price" required />
-            <input type="number" id="duration" placeholder="Duration (mins)" required />
-            <button type="submit">Start Auction</button>
+            <input type="number" id="duration" placeholder="Duration (millis)" required />
+            <button type="button" onclick="startAuction()">Start Auction</button>
         </form>
     </div>
 
@@ -150,7 +152,6 @@
                 <td class="time-left">12 min</td>
                 <td>
                     <button  class="close-btn">Close Auction</button>
-                    <button  class="restart-btn" onclick="restartAuction(1)">Restart Auction</button>
                 </td>
             </tr>
             <!-- More rows can be added dynamically -->
@@ -194,20 +195,26 @@
             const floorBidElem = clone.getElementsByClassName('floor-price')[0];
             const timeLeftElem = clone.getElementsByClassName('time-left')[0];
             const closeBtn = clone.getElementsByClassName('close-btn')[0];
-            const restartBtn = clone.getElementsByClassName('restart-btn')[0];
-
 
             itemIdElem.textContent = auction.auctionId;
             itemNameElem.textContent = auction.itemName;
             currentBidElem.textContent = "Rs."+auction.highestBid;
             floorBidElem.textContent = "Rs."+auction.floorPrice;
-            timeLeftElem.textContent = (auction.endTimestamp-Date.now())>0?(formatMilliseconds(auction.endTimestamp-Date.now())):"";
-            closeBtn.onclick = () => viewAuction(auction.auctionId);
-
+            timeLeftElem.textContent = (auction.endTimestamp-Date.now())>0?(formatMilliseconds(auction.endTimestamp-Date.now())):"Ended";
+            closeBtn.onclick = () => closeAuction(auction.auctionId);
             container.appendChild(clone);
         });
     }
 
+    async function closeAuction(auctionId) {
+        const response = await fetch("http://localhost:8080/oas/auction?auctionId=" + auctionId,{
+            method: 'DELETE'})
+        if(response.ok){
+
+        }else{
+            console.log("Auction could not close");
+        }
+    }
 
     setInterval(function () {
         auctionsList.forEach(function (auction) {

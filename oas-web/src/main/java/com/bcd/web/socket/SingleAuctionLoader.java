@@ -36,16 +36,20 @@ public class SingleAuctionLoader {
     }
 
     public static void notifyActiveSessions(Integer auctionId) {
-        for (Session session : auctionSessions.get(auctionId)) {
-            if (session.isOpen()) {
-                try {
-                    session.getAsyncRemote().sendText(
-                            getAuctionManager().getAuctionById(auctionId).toString(true)
-                    );
-                } catch (NamingException e) {
-                    throw new RuntimeException(e);
+        Set<Session> sessions = auctionSessions.get(auctionId);
+        if(sessions != null) {
+            for (Session session : sessions) {
+                if (session.isOpen()) {
+                    try {
+                        session.getAsyncRemote().sendText(
+                                getAuctionManager().getAuctionById(auctionId).toString(true)
+                        );
+                    } catch (NamingException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
+
     }
 }
